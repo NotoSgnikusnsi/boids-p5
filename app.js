@@ -73,7 +73,6 @@ class Boid {
   }
 
   // フレームごとの処理
-  // フレームごとの処理
   update() {
     // 速度を更新する
     this.velocity.add(this.acceleration);
