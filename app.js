@@ -1,8 +1,10 @@
 class Boid {
-  constructor() {
+  constructor(color) {
     this.position = createVector(random(width), random(height));
     this.velocity = p5.Vector.random2D(); // 大きさが1のランダムなベクトル
     this.acceleration = createVector(0, 0);
+
+    this.color = color;
   }
 
   // 結合
@@ -96,9 +98,9 @@ class Boid {
   }
 
   display() {
-    // 位置に円を描く
+    // 円を描く
     stroke(0);
-    fill(0, 100);
+    fill(this.color);
     ellipse(this.position.x, this.position.y, 16, 16);
   }
 
@@ -107,19 +109,28 @@ class Boid {
 const boids = [];
 const boidsCount = 100;
 
+const boids2 = [];
+const boidsCount2 = 100;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  const boidsColor = color(random(255), random(255), random(255));
+  const boidsColor2 = color(random(255), random(255), random(255));
   for (let i = 0; i < boidsCount; i++) {
-    boids.push(new Boid());
+    boids.push(new Boid(boidsColor));
+  }
+  for (let i = 0; i < boidsCount2; i++) {
+    boids2.push(new Boid(boidsColor2));
   }
 }
 
 function draw() {
   background(255);
   for (let boid of boids) {
-    boid.cohesion(boids);
-    boid.separation(boids);
-    boid.alignment(boids);
+    boid.update();
+    boid.display();
+  }
+  for (let boid of boids2) {
     boid.update();
     boid.display();
   }
