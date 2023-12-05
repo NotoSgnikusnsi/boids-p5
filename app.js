@@ -50,7 +50,25 @@ class Boid {
   }
 
   // 整列
-  alignment(boids) { }
+  alignment(boids) {
+    // 1. 整列したい仲間の距離を決める
+    const radius = 100;
+    const sum = createVector(0, 0);
+    const count = 0;
+    // 2. 仲間の合計速度を計算する
+    for (let boid of boids) {
+      const distance = this.position.dist(boid.position);
+      if (distance < radius) {
+        sum.add(boid.velocity);
+        count++;
+      }
+    }
+    // 3. 仲間の平均速度に向かうベクトルを計算する
+    sum.div(count);
+    sum.setMag(0.1);
+    // 4. 速度を更新する
+    this.acceleration.add(sum);
+  }
 
 
 }
