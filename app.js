@@ -10,23 +10,26 @@ class Boid {
   // 結合
   cohesion(boids) {
     // 1. 結合したい仲間の距離を決める
-    const radius = 100;
+    const maxRadius = 100;
+    const minRadius = 50;
     const sum = createVector(0, 0);
     let count = 0;
     // 2. 仲間の合計距離を計算する
     for (let boid of boids) {
       const distance = this.position.dist(boid.position);
-      if (distance < radius) {
+      if (distance < maxRadius && distance >= minRadius) {
         sum.add(boid.position);
         count++;
       }
     }
     // 3. 仲間の平均位置に向かうベクトルを計算する
-    sum.div(count);
-    sum.sub(this.position);
-    sum.setMag(0.1);
-    // 4. 速度を更新する
-    this.acceleration.add(sum);
+    if (count > 0) {
+      sum.div(count);
+      sum.sub(this.position);
+      sum.setMag(0.1);
+      // 4. 速度を更新する
+      this.acceleration.add(sum);
+    }
   }
 
   // 分離
@@ -76,8 +79,8 @@ class Boid {
   update() {
     // 速度を更新する
     this.velocity.add(this.acceleration);
-    // 速度の大きさを2にする
-    this.velocity.limit(2);
+    // 速度の大きさを制限する
+    this.velocity.limit(5);
     // 位置を更新する
     this.position.add(this.velocity);
     // 加速度をリセットする
@@ -108,28 +111,20 @@ class Boid {
 const boids = [];
 const boidsCount = 100;
 
-const boids2 = [];
-const boidsCount2 = 100;
-
 function setup() {
   createCanvas(windowWidth, windowHeight);
   const boidsColor = color(random(255), random(255), random(255));
-  const boidsColor2 = color(random(255), random(255), random(255));
   for (let i = 0; i < boidsCount; i++) {
     boids.push(new Boid(boidsColor));
-  }
-  for (let i = 0; i < boidsCount2; i++) {
-    boids2.push(new Boid(boidsColor2));
   }
 }
 
 function draw() {
   background(255);
   for (let boid of boids) {
-    boid.update();
-    boid.display();
-  }
-  for (let boid of boids2) {
+    boid.cohesion(boids);
+    boid.separation(boids);
+    boid.alignment(boids);
     boid.update();
     boid.display();
   }
