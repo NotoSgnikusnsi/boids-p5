@@ -100,10 +100,18 @@ class Boid {
   }
 
   display() {
-    // 円を描く
+    // 三角形を描く
     stroke(0);
     fill(this.color);
-    ellipse(this.position.x, this.position.y, 16, 16);
+    push();
+    translate(this.position.x, this.position.y);
+    rotate(this.velocity.heading() + radians(90));
+    beginShape();
+    vertex(0, -12);
+    vertex(-6, 12);
+    vertex(6, 12);
+    endShape(CLOSE);
+    pop();
   }
 
 }
